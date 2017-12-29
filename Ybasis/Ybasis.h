@@ -10,7 +10,7 @@
 
 #include <iostream>
 #include <string>
-#include <pthread.h>
+#include <thread>
 #include <mutex>
 
 

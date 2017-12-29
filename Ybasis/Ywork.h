@@ -17,8 +17,12 @@
 class work
 {
 public:
-protected:
+	virtual bool		Init();
+	virtual bool		Start();
+	virtual void		Loop();
 private:
-
+	bool		Run();
+private:
+	std::shared_ptr ptr;
 };
 #endif /* __YWORK_H__ */

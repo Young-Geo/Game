@@ -6,3 +6,9 @@
  */
 
 #include "Ywork.h"
+
+bool		work::Run()
+{
+	ptr.reset(new std::thread(work::Loop()));
+	return true;
+}
