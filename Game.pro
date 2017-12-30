@@ -4,6 +4,8 @@ SUBDIRS += \
     Ybasis  \
     YGameDB \
     YGameDesk \
-    YGameManage
+    YGameManage \
+    YGameGate \
+    YGameLogin
 
 CONFIG += ordered

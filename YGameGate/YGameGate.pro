@@ -9,4 +9,4 @@ INCLUDEPATH += ../Ybasis
 
 SOURCES += main.cpp
 
-TARGET = GameManage
+TARGET = GameGate
