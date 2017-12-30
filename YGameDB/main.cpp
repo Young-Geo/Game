@@ -1,44 +1,9 @@
-//============================================================================
-// Name        : Game.cpp
-// Author      :
-// Version     :
-// Copyright   : Your copyright notice
-// Description : Hello World in C, Ansi-style
-//============================================================================
+#include "Ybasis.h"
 
-#include <stdio.h>
-#include <stdlib.h>
+using namespace std;
 
-int main(void) {
-	puts("Hello World!!!");
-	return EXIT_SUCCESS;
+int main()
+{
+    cout << "Hello World!" << endl;
+    return 0;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -12,6 +12,7 @@
 #include <string>
 #include <thread>
 #include <mutex>
+#include <functional>
 
 
 

@@ -21,8 +21,8 @@ public:
 	virtual bool		Start();
 	virtual void		Loop();
 private:
-	bool		Run();
+    void		Run();
 private:
-	std::shared_ptr ptr;
+    std::shared_ptr<std::thread> thread_ptr;
 };
 #endif /* __YWORK_H__ */

@@ -6,9 +6,12 @@
  */
 
 #include "Ywork.h"
+#include <functional>
 
-bool		work::Run()
+void		work::Run()
 {
-	ptr.reset(new std::thread(work::Loop()));
-	return true;
+    if (!thread_ptr)
+    {
+        thread_ptr = std::make_shared<std::thread>(std::thread(std::bind(&work::Loop, this)));
+    }
 }
