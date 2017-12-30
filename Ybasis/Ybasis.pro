@@ -5,8 +5,11 @@ CONFIG -= qt
 
 HEADERS += \
     Ybasis.h \
-    Ywork.h
+    Ywork.h \
+    Ylog.h \
+    Yalone.hpp
 
 SOURCES += \
     Ybsis.cpp \
-    Ywork.cpp
+    Ywork.cpp \
+    Ylog.cpp
