@@ -9,50 +9,9 @@
 entity_t* Entity_Init()
 {
     entity_t *entity = NULL;
-    Yassert((entity = Ymalloc(sizeof(entity_t))));
+    Yassert((entity = (entity_t *)Ymalloc(sizeof(entity_t))));
     Yzero(entity, sizeof(entity_t));
     return entity;
-}
-
-void master_libevent_work(int fd, short which, void *arg)
-{
-    int cfd = 0, i = 0, inx = 0;
-    struct sockaddr_in caddr;
-    socklen_t slen;
-    // accept
-    assert(arg);
-    slen = sizeof(caddr);
-    global_t *master = (global_t *)arg;
-
-    cfd = accept(master->conn_receive_fd, (struct sockaddr *)&caddr, &slen);
-    if (cfd < 0) {
-        fprintf(stderr, "master_libevent_work socket error %d\n", cfd );
-        return;
-    }
-
-    xmessage("conn num %d, %d, %d, %d,\n", master->thread_entitys[0].conn_num,
-                                        master->thread_entitys[1].conn_num,
-                                        master->thread_entitys[2].conn_num,
-                                        master->thread_entitys[3].conn_num);
-    // ���������������߳�
-
-    inx = (master->last_thread + 1) % master->num_threads;
-    master->last_thread = inx;
-
-    cq_push(&master->thread_entitys[inx].conn_queue, cfd);
-
-    //write 'c'
-    if (strlen("C") != write(master->thread_entitys[inx].notify_send_fd, "C", strlen("C"))) {
-        close(cfd);
-        return;
-    }
-    /*
-    // ���ļ����������͸���Ӧ���߳�
-    if (sizeof(cfd) != write(master->thread_entitys[inx].notify_send_fd, &cfd, sizeof(cfd))) {
-        close(cfd);
-        return;
-    }
-    */
 }
 
 
@@ -60,11 +19,11 @@ master_t* Master_Init()
 {
     master_t *master = NULL;
 
-    Yassert((master = Ymalloc(sizeof(master_t))));
+    Yassert((master = (master_t *)Ymalloc(sizeof(master_t))));
     Yzero(master, sizeof(master_t));
 
     master->last_event = -1;
-    function<void(master_t *)> func = [=](master_t *master)->void
+    std::function<void(master_t *)> func = [=](master_t *master)->void
     {
         /*
         int lfd;
@@ -92,7 +51,7 @@ master_t* Master_Init()
             exit(1);
         }
         */
-        socket* _socket = socketTool::GetSocket(YSOCKET::SOCKET_SERVER, YSOCKET::SOCKET_STREAM_TCP, Ystring("127.0.0.1"), 9001);
+        Socket* _socket = socketTool::GetSocket(YSOCKET::SOCKET_SERVER, YSOCKET::SOCKET_STREAM_TCP, Ystring("127.0.0.1"), 9001);
 
 
         master->master_base = event_base_new();
@@ -103,7 +62,7 @@ master_t* Master_Init()
             exit(1);
         }
 
-        function<void(Yint, Yshort, void *)> MasterWorkFunc = [=] (Yint fd, Yshort which, void *arg)->void
+        std::function<void(Yint, Yshort, void *)> MasterWorkFunc = [=] (Yint fd, Yshort which, void *arg)->void
         {
             //an 应该接受链接 分配到不同的event
         };
@@ -129,4 +88,3 @@ YS::YS()
 {
     _master = ::Master_Init();
 }
-

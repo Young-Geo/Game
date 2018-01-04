@@ -50,8 +50,8 @@ typedef std::string Ystring;
 #define Ydelete delete
 #define Yassert assert
 #define Yzero(x,y) memset((x), 0, (y))
-#define Ymalloc(size) malloc((size))
 #define Yfree(ptr) free((ptr))
+#define Ymalloc(size) malloc((size))
 
 #define YYNULL(x, y) if(!(x)) return y
 #define YNULL(x) if(!(x)) return
