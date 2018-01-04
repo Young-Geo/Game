@@ -6,12 +6,12 @@
  */
 #include "Ysocket.h"
 
-socket::socket()
+Socket::Socket()
 {
     this->_isInit = false;
 }
 
-socket::socket(YSOCKET::SOCKET_MODEL mode, YSOCKET::SOCKET_STREAM_MODEL streamMode, Ystring ip, Yint port)
+Socket::Socket(YSOCKET::SOCKET_MODEL mode, YSOCKET::SOCKET_STREAM_MODEL streamMode, Ystring ip, Yint port)
 {
     this->_mode = mode;
     this->_streamMode = streamMode;
@@ -20,32 +20,32 @@ socket::socket(YSOCKET::SOCKET_MODEL mode, YSOCKET::SOCKET_STREAM_MODEL streamMo
     this->_isInit = false;
 }
 
-void    socket::SetSocketModel(YSOCKET::SOCKET_MODEL mode)
+void    Socket::SetSocketModel(YSOCKET::SOCKET_MODEL mode)
 {
     this->_mode = mode;
 }
 
-void    socket::SetSocketStreamModel(YSOCKET::SOCKET_STREAM_MODEL streamMode)
+void    Socket::SetSocketStreamModel(YSOCKET::SOCKET_STREAM_MODEL streamMode)
 {
     this->_streamMode = streamMode;
 }
 
-void    socket::SetSocketIp(Ystring ip)
+void    Socket::SetSocketIp(Ystring ip)
 {
     this->_ip = ip;
 }
 
-void    socket::SetSocketPort(Yint port)
+void    Socket::SetSocketPort(Yint port)
 {
     this->_port = port;
 }
 
-Yint    socket::GetFd()
+Yint    Socket::GetFd()
 {
     return this->_fd;
 }
 
-bool    socket::Init()
+bool    Socket::Init()
 {
     struct sockaddr_in addr;
     socklen_t slen;

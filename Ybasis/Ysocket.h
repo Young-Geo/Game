@@ -28,11 +28,11 @@ namespace YSOCKET
         SOCKET_STREAM_UDP = SOCK_DGRAM,
     };
 }
-class socket
+class Socket
 {
 public:
-    socket();
-    socket(YSOCKET::SOCKET_MODEL mode, YSOCKET::SOCKET_STREAM_MODEL streamMode, Ystring ip, Yint port);
+    Socket();
+    Socket(YSOCKET::SOCKET_MODEL mode, YSOCKET::SOCKET_STREAM_MODEL streamMode, Ystring ip, Yint port);
 public:
     void    SetSocketModel(YSOCKET::SOCKET_MODEL mode);
     void    SetSocketStreamModel(YSOCKET::SOCKET_STREAM_MODEL streamMode);
@@ -54,9 +54,9 @@ class socketTool
 {
 public:
     socketTool();
-    static socket* GetSocket(YSOCKET::SOCKET_MODEL mode, YSOCKET::SOCKET_STREAM_MODEL streamMode, Ystring ip, Yint port)
+    static Socket* GetSocket(YSOCKET::SOCKET_MODEL mode, YSOCKET::SOCKET_STREAM_MODEL streamMode, Ystring ip, Yint port)
     {
-        return new socket(mode, streamMode, ip, port);
+        return new Socket(mode, streamMode, ip, port);
     }
 private:
 
