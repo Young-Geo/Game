@@ -49,7 +49,6 @@ master_t* Master_Init();
 class YS : public alone<YS>
 {
 public:
-    YS();
 private:
     master_t *_master;
 };

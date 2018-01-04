@@ -123,10 +123,3 @@ master_t* Master_Init()
 
     return 0;
 }
-
-
-YS::YS()
-{
-    _master = ::Master_Init();
-}
-
