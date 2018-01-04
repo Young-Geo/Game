@@ -4,13 +4,13 @@
  *  Created on: 2017-12-26
  *      Author: Young.Geo
  */
-
 #ifndef __YLOG_H__
 #define __YLOG_H__
 
 #include "Ybasis.h"
 #include "Ywork.h"
 #include "Yalone.hpp"
+#include "Ytime.h"
 
 #define _LOGSTRING(level) ((level)==1? _TO_STR(LOG):((level)==2? _TO_STR(BUG) : _TO_STR(ERR)))
 
@@ -47,6 +47,8 @@ public:
     void        WriteFileLog(const Ychar *data);
 private:
     Ystring _fileName;
+    Ystring _nTimeStr;
+    std::ofstream _ofs;
 };
 
 #define YLOG_LOG(format, ...) Log::GetEntity()->ConsoleLog(LOG_LEVEL_LOG, __FILE__, __FUNCTION__, __LINE__, format, ##__VA_ARGS__)

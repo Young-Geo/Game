@@ -7,9 +7,17 @@ HEADERS += \
     Ybasis.h \
     Ywork.h \
     Ylog.h \
-    Yalone.hpp
+    Yalone.hpp \
+    Ytime.h \
+    Yconfig.h \
+    YS.h \
+    Ysocket.h
 
 SOURCES += \
     Ybsis.cpp \
     Ywork.cpp \
-    Ylog.cpp
+    Ylog.cpp \
+    Ytime.cpp \
+    Yconfig.cpp \
+    YS.cpp \
+    Ysocket.cpp

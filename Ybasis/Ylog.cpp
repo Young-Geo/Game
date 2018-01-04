@@ -27,6 +27,7 @@ void        Log::ConsoleLog(YLOG_LEVEL level, const Ychar *file, const Ychar *fu
 void        Log::SetFileName(Ystring fileName)
 {
     this->_fileName = fileName;
+    Start();//直接开始线程
 }
 
 bool		Log::Init()
@@ -61,6 +62,19 @@ void        Log::WriteFileLog(const Ychar *data)
 {
     YNULL(data);
     //write file
+    Ytime nTime;
+    Ystring nTimeStr;
+    nTimeStr = nTime.GetStringLocalTime();
+    if (!_ofs.is_open() || _nTimeStr != nTimeStr) {
+        _ofs.close();
+        _nTimeStr = nTimeStr;
+        nTimeStr += "_";
+        nTimeStr += _fileName;
+        _ofs.open(nTimeStr.c_str(), std::ios::app | std::ios::out);
+    }
+    if (_ofs.is_open()) {
+        _ofs << data<< std::endl;
+    }
 }
 void		Log::Loop()
 {
