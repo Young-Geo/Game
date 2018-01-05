@@ -7,6 +7,8 @@ QT += Ybasis
 
 INCLUDEPATH += ../Ybasis
 
+LIBS += ../libYbasis.so.1.0.0
+
 SOURCES += main.cpp \
     ocicursor.cpp \
     ocidatabase.cpp

@@ -9,8 +9,8 @@
 
 #include "Ybasis.h"
 #include "Ywork.h"
-#include "Yalone.hpp"
 #include "Ytime.h"
+#include "Yalone.hpp"
 
 #define _LOGSTRING(level) ((level)==1? _TO_STR(LOG):((level)==2? _TO_STR(BUG) : _TO_STR(ERR)))
 
@@ -54,7 +54,5 @@ private:
 #define YLOG_LOG(format, ...) Log::GetEntity()->ConsoleLog(LOG_LEVEL_LOG, __FILE__, __FUNCTION__, __LINE__, format, ##__VA_ARGS__)
 #define YLOG_BUG(format, ...) Log::GetEntity()->ConsoleLog(LOG_LEVEL_BUG, __FILE__, __FUNCTION__, __LINE__, format, ##__VA_ARGS__)
 #define YLOG_ERR(format, ...) Log::GetEntity()->ConsoleLog(LOG_LEVEL_ERR, __FILE__, __FUNCTION__, __LINE__, format, ##__VA_ARGS__)
-
-#define YLOG_START() Log::GetEntity()->Start()
 
 #endif // YLOG_H

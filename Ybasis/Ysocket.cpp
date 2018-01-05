@@ -8,6 +8,8 @@
 
 Socket::Socket()
 {
+    _maxListenNum = MAXLISTENNUM;
+    _fd = -1;
     this->_isInit = false;
 }
 
@@ -17,6 +19,8 @@ Socket::Socket(YSOCKET::SOCKET_MODEL mode, YSOCKET::SOCKET_STREAM_MODEL streamMo
     this->_streamMode = streamMode;
     this->_ip = ip;
     this->_port = port;
+    _maxListenNum = MAXLISTENNUM;
+    _fd = -1;
     this->_isInit = false;
 }
 
@@ -40,6 +44,11 @@ void    Socket::SetSocketPort(Yint port)
     this->_port = port;
 }
 
+void    Socket::SetMaxListenNum(Yint num)
+{
+    this->_maxListenNum = num;
+}
+
 Yint    Socket::GetFd()
 {
     return this->_fd;
@@ -50,27 +59,58 @@ bool    Socket::Init()
     struct sockaddr_in addr;
     socklen_t slen;
 
+    if (_isInit) {
+        YLOG_LOG("Socket::Init _isInit double\n");
+        return false;
+    }
+
     if((_fd = ::socket(AF_INET, YSOCKET::SOCKET_STREAM_TCP, 0)) < 0) {
-        YLOG_ERR("socket::Init socket error %d\n", _fd);
+        YLOG_ERR("Socket::Init socket error %d\n", _fd);
         return false;
     }
 
     Yzero(&addr, sizeof(addr));
     addr.sin_family = AF_INET;
     //addr.sin_addr.s_addr = htonl(_ip);
-    inet_pton(AF_INET, _ip, (void *)(&addr.sin_addr.s_addr));
+    inet_pton(AF_INET, _ip.c_str(), (void *)(&addr.sin_addr.s_addr));
     addr.sin_port = htons(_port);
     slen = sizeof(addr);
     if (::bind(_fd, (struct sockaddr *)&addr, slen) < 0) {
-        YLOG_ERR("socket::bind socket error %d\n", _fd);
+        YLOG_ERR("Socket::bind socket error %d\n", _fd);
         return false;
     }
     _isInit = true;
     return _isInit;
 }
 
+bool    Socket::Listen()
+{
+    if (!_isInit || _mode != YSOCKET::SOCKET_SERVER || _streamMode != YSOCKET::SOCKET_STREAM_TCP) {
+        YLOG_BUG("Socket::Listen error\n");
+        return false;
+    }
 
+    if (_fd < 0) {
+        YLOG_BUG("Socket::Listen fd %d error\n", _fd);
+        return false;
+    }
 
+    if (::listen(this->_fd, this->_maxListenNum)) {
+        YLOG_BUG("Socket::Listen error\n");
+        return false;
+    }
+
+    return true;
+}
+
+bool    Socket::IsS()
+{
+    return this->_mode == YSOCKET::SOCKET_SERVER;
+}
+bool    Socket::IsC()
+{
+    return this->_mode == YSOCKET::SOCKET_CLIENT;
+}
 
 
 ///////////////////////////////////////////////////////

@@ -5,7 +5,9 @@ CONFIG -= qt
 
 QT += Ybasis
 
-INCLUDEPATH += ../Ybasis
+LIBS += ../libYbasis.so.1.0.0
+
+LIBS += Ybasis
 
 SOURCES += main.cpp
 

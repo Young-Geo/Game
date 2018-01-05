@@ -30,6 +30,7 @@ namespace YSOCKET
 }
 class Socket
 {
+#define MAXLISTENNUM 128
 public:
     Socket();
     Socket(YSOCKET::SOCKET_MODEL mode, YSOCKET::SOCKET_STREAM_MODEL streamMode, Ystring ip, Yint port);
@@ -38,15 +39,20 @@ public:
     void    SetSocketStreamModel(YSOCKET::SOCKET_STREAM_MODEL streamMode);
     void    SetSocketIp(Ystring ip);
     void    SetSocketPort(Yint port);
+    void    SetMaxListenNum(Yint num);
     Yint    GetFd();
     //
     bool    Init();
+    bool    Listen();
+    bool    IsS();
+    bool    IsC();
 private:
     YSOCKET::SOCKET_MODEL _mode;
     YSOCKET::SOCKET_STREAM_MODEL _streamMode;
     Ystring     _ip;
     Yint        _port;
     Yint        _fd;
+    Yint        _maxListenNum;
     bool        _isInit;
 };
 
@@ -56,7 +62,18 @@ public:
     socketTool();
     static Socket* GetSocket(YSOCKET::SOCKET_MODEL mode, YSOCKET::SOCKET_STREAM_MODEL streamMode, Ystring ip, Yint port)
     {
-        return new Socket(mode, streamMode, ip, port);
+        Socket *_socket = NULL;
+        Yassert(_socket = new Socket(mode, streamMode, ip, port));
+
+        if (!_socket->Init()) {
+            Ydelete _socket;
+            return NULL;
+        }
+        if (_socket->IsS() && !_socket->Listen()) {
+            Ydelete _socket;
+            return NULL;
+        }
+        return _socket;
     }
 private:
 
