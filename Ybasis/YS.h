@@ -20,6 +20,15 @@
 #define WORK_THREAD 4
 
 typedef event_callback_fn event_call_t;
+typedef bufferevent_data_cb event_data_call_t;
+typedef bufferevent_event_cb event_data_extern_t;
+
+typedef struct _event_rwe_t
+{
+    event_data_call_t call_r;
+    event_data_call_t call_w;
+    event_data_extern_t call_ex;
+} event_rwe_t;
 
 typedef struct _entity_t
 {
@@ -32,6 +41,7 @@ typedef struct _entity_t
     int notify_receive_fd;
     int notify_send_fd;
     int conn_num;
+    event_rwe_t call;
 } entity_t;
 
 
@@ -45,7 +55,7 @@ typedef struct _master_t
     std::shared_ptr<std::thread> thread_ptr;
 } master_t;
 
-entity_t* Entity_Init();
+entity_t* Entity_Init(event_rwe_t call);
 
 master_t* Master_Init();
 
@@ -55,7 +65,8 @@ class YS : public alone<YS>
 {
 public:
     void    Init();
-    void    AddEvent();
+protected:
+    void    AddEvent(event_rwe_t call);
 private:
     master_t *_master;
 };

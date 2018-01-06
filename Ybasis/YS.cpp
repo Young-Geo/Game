@@ -6,7 +6,7 @@
  */
 #include "YS.h"
 
-entity_t* Entity_Init()
+entity_t* Entity_Init(event_rwe_t call)
 {
     entity_t *entity = NULL;
     Yint    pfd[2] = { 0 };
@@ -21,6 +21,8 @@ entity_t* Entity_Init()
 
     entity->notify_receive_fd = pfd[0];
     entity->notify_send_fd = pfd[1];
+
+    entity->call = call;
 
     if (!(entity->base = event_base_new())) {
         YLOG_ERR("Entity_Init base new error");
@@ -43,7 +45,7 @@ entity_t* Entity_Init()
         }
         //cfd par
         bev = bufferevent_socket_new(entity->base, cfd, BEV_OPT_CLOSE_ON_FREE);
-        bufferevent_setcb(bev, NULL, NULL, NULL, entity);//r w error
+        bufferevent_setcb(bev, entity->call.call_r, entity->call.call_w, entity->call.call_ex, entity);//r w error
         bufferevent_enable(bev, EV_READ|EV_WRITE);
 
         ++entity->conn_num;
@@ -74,56 +76,57 @@ master_t* Master_Init()
     Yzero(master, sizeof(master_t));
 
     master->last_event = -1;
+
+
+    Socket* _socket = socketTool::GetSocket(YSOCKET::SOCKET_SERVER, YSOCKET::SOCKET_STREAM_TCP, Ystring("127.0.0.1"), 9001);
+
+    master->master_base = event_base_new();
+    if (!master->master_base) {
+        fprintf(stderr, "Can't allocate event base\n");
+        exit(1);
+    }
+
+    //std::function<void(Yint, Yshort, void *)> MasterWorkFunc = [=] (Yint fd, Yshort which, void *arg)->void
+    event_call_t MasterWorkFunc = [=] (Yint fd, Yshort which, void *arg)->void
+    {
+        //an 应该接受链接 分配到不同的event
+
+        int cfd = 0;
+        struct sockaddr_in caddr;
+        socklen_t slen;
+        // accept
+        Yassert(arg);
+        master_t *master = (master_t *)arg;
+
+        slen = sizeof(caddr);
+        cfd = accept(master->conn_receive_fd, (struct sockaddr *)&caddr, &slen);
+        if (cfd < 0) {
+            YLOG_ERR("accept socket error %d\n", cfd);
+            return;
+        }
+
+        master->last_event = (master->last_event + 1) % master->_entitys.size();
+
+        if (sizeof(cfd) != write(master->_entitys[master->last_event]->notify_send_fd, &cfd, sizeof(cfd))) {
+            YLOG_ERR("sendto %d socket fd error %d\n", master->last_event, cfd);
+            close(cfd);
+            return;
+        }
+
+    };
+
+    master->conn_receive_fd = _socket->GetFd();
+    event_set(&master->master_event, master->conn_receive_fd,
+              EV_READ | EV_PERSIST, MasterWorkFunc, master);
+    event_base_set(master->master_base, &master->master_event);
+
+    if (event_add(&master->master_event, 0) == -1) {
+        YLOG_ERR("Can'tevent_add\n");
+        exit(1);
+    }
+
     std::function<void(master_t *)> master_Func = [=](master_t *master)->void
     {
-
-        Socket* _socket = socketTool::GetSocket(YSOCKET::SOCKET_SERVER, YSOCKET::SOCKET_STREAM_TCP, Ystring("127.0.0.1"), 9001);
-
-        master->master_base = event_base_new();
-        if (!master->master_base) {
-            fprintf(stderr, "Can't allocate event base\n");
-            exit(1);
-        }
-
-        //std::function<void(Yint, Yshort, void *)> MasterWorkFunc = [=] (Yint fd, Yshort which, void *arg)->void
-        event_call_t MasterWorkFunc = [=] (Yint fd, Yshort which, void *arg)->void
-        {
-            //an 应该接受链接 分配到不同的event
-
-            int cfd = 0;
-            struct sockaddr_in caddr;
-            socklen_t slen;
-            // accept
-            Yassert(arg);
-            master_t *master = (master_t *)arg;
-
-            slen = sizeof(caddr);
-            cfd = accept(master->conn_receive_fd, (struct sockaddr *)&caddr, &slen);
-            if (cfd < 0) {
-                YLOG_ERR("accept socket error %d\n", cfd);
-                return;
-            }
-
-            master->last_event = (master->last_event + 1) % master->_entitys.size();
-
-            if (sizeof(cfd) != write(master->_entitys[master->last_event]->notify_send_fd, &cfd, sizeof(cfd))) {
-                YLOG_ERR("sendto %d socket fd error %d\n", master->last_event, cfd);
-                close(cfd);
-                return;
-            }
-
-        };
-
-        master->conn_receive_fd = _socket->GetFd();
-        event_set(&master->master_event, master->conn_receive_fd,
-                  EV_READ | EV_PERSIST, MasterWorkFunc, master);
-        event_base_set(master->master_base, &master->master_event);
-
-        if (event_add(&master->master_event, 0) == -1) {
-            YLOG_ERR("Can'tevent_add\n");
-            exit(1);
-        }
-
         event_base_loop(master->master_base, 0);
     };
 
@@ -143,9 +146,13 @@ void    YS::Init()
     Yassert(_master = ::Master_Init());
 }
 
-void    YS::AddEvent()
+void    YS::AddEvent(event_rwe_t call)
 {
     entity_t *entity = NULL;
-    Yassert(entity = ::Entity_Init());
+    if(!_master) {
+        YLOG_ERR("YS::AddEvent not init");
+        return;
+    }
+    Yassert(entity = ::Entity_Init(call));
     _master->_entitys.push_back(entity);
 }
