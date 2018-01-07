@@ -7,7 +7,7 @@ QT += Ybasis
 
 INCLUDEPATH += ../Ybasis
 
-LIBS += ../libYbasis.so.1.0.0
+LIBS += ../libYbasis.so.1.0.0 -lmysqlclient
 
 SOURCES += main.cpp \
     ocicursor.cpp \

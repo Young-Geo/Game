@@ -7,8 +7,6 @@ QT += Ybasis
 
 LIBS += ../libYbasis.so.1.0.0
 
-LIBS += Ybasis
-
 SOURCES += main.cpp
 
 TARGET = GameGate

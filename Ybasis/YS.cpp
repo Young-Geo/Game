@@ -146,13 +146,19 @@ void    YS::Init()
     Yassert(_master = ::Master_Init());
 }
 
-void    YS::AddEvent(event_rwe_t call)
+void    YS::Start()
+{
+    Init();
+}
+
+bool    YS::AddEvent(event_rwe_t call)
 {
     entity_t *entity = NULL;
     if(!_master) {
         YLOG_ERR("YS::AddEvent not init");
-        return;
+        return false;
     }
     Yassert(entity = ::Entity_Init(call));
     _master->_entitys.push_back(entity);
+    return true;
 }

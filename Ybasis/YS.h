@@ -65,8 +65,9 @@ class YS : public alone<YS>
 {
 public:
     void    Init();
+    void    Start();
 protected:
-    void    AddEvent(event_rwe_t call);
+    bool    AddEvent(event_rwe_t call);
 private:
     master_t *_master;
 };
