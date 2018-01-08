@@ -64,7 +64,12 @@ entity_t* Entity_Init(event_rwe_t call)
     };
 
     //entity->thread_handle = new std::thread(std::bind(entity_Func, entity));
-    entity->thread_ptr = std::make_shared<std::thread>(std::thread(std::bind(entity_Func, entity)));
+    if (!entity->thread_ptr) {
+        entity->thread_ptr = std::make_shared<std::thread>(std::thread(std::bind(entity_Func, entity)));
+    }
+
+    entity->thread_ptr->detach();
+
     return entity;
 }
 
@@ -134,6 +139,9 @@ master_t* Master_Init()
     if (!master->thread_ptr) {
         master->thread_ptr = std::make_shared<std::thread>(std::thread(std::bind(master_Func, master)));
     }
+
+    master->thread_ptr->detach();
+
     return 0;
 }
 
@@ -141,9 +149,10 @@ master_t* Master_Init()
 
 
 //////////////////////////////////////////////////////
-void    YS::Init()
+bool    YS::Init()
 {
     Yassert(_master = ::Master_Init());
+    return true;
 }
 
 void    YS::Start()

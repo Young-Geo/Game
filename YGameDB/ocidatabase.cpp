@@ -1,3 +1,9 @@
+/*
+ * ocidatabase.cpp
+ *
+ *  Created on: 2017-12-26
+ *      Author: Young.Geo
+ */
 #include "ocidatabase.h"
 #include <time.h>
 #include <stdio.h>

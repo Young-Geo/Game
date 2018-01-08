@@ -73,3 +73,13 @@ bool        work::IsStop()
 {
     return this->isStop;
 }
+
+void        work::Join()
+{
+    thread_ptr->join();
+}
+
+void        work::Detach()
+{
+    thread_ptr->detach();
+}

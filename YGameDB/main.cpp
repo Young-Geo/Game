@@ -1,9 +1,12 @@
-#include "Ybasis.h"
+#include "work.h"
 
-using namespace std;
 
 int main()
 {
-    cout << "Hello World!" << endl;
+    /////
+    ////
+    gWORK->Init();
+    gWORK->Start();//nei loop
+    gWORK->Detach();
     return 0;
 }

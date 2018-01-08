@@ -1,5 +1,11 @@
-#ifndef __OCI_CURSOR_H
-#define __OCI_CURSOR_H
+/*
+ * ocicursor.h
+ *
+ *  Created on: 2017-12-26
+ *      Author: Young.Geo
+ */
+#ifndef __OCI_CURSOR_H__
+#define __OCI_CURSOR_H__
 
 #include "ocidatabase.h"
 #define MAX_COL_COUNT	32

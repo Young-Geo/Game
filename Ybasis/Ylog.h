@@ -41,6 +41,7 @@ public:
     void                SetFileName(Ystring fileName);
     virtual bool		Init();
     virtual void		Loop();
+    virtual void        Exit();
 public:
     void        ConsoleLog(YLOG_LEVEL level, const Ychar *file, const Ychar *func, const Yint line, const Ychar *format, ...);
     Ystring     FormatLogData(LogData *logdata);

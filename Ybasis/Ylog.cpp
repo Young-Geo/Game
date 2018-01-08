@@ -27,7 +27,7 @@ void        Log::ConsoleLog(YLOG_LEVEL level, const Ychar *file, const Ychar *fu
 void        Log::SetFileName(Ystring fileName)
 {
     this->_fileName = fileName;
-    Start();//直接开始线程
+    work::Start();//直接开始线程
 }
 
 bool		Log::Init()
@@ -93,4 +93,9 @@ void		Log::Loop()
         WriteFileLog(msg.c_str());
         delete logdata;
     }
+}
+
+void    Log::Exit()
+{
+    //
 }

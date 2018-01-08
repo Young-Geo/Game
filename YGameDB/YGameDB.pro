@@ -7,15 +7,17 @@ QT += Ybasis
 
 INCLUDEPATH += ../Ybasis
 
-LIBS += ../libYbasis.so.1.0.0 -lmysqlclient
+LIBS += ../libYbasis.so.1.0.0 -lmysqlclient -levent
 
 SOURCES += main.cpp \
     ocicursor.cpp \
-    ocidatabase.cpp
+    ocidatabase.cpp \
+    work.cpp
 
 HEADERS += \
     ocicursor.h \
-    ocidatabase.h
+    ocidatabase.h \
+    work.h
 
 
 TARGET = GameManage

@@ -1,5 +1,11 @@
-#ifndef __OCI_DATABASE_H
-#define __OCI_DATABASE_H
+/*
+ * ocidatabase.h
+ *
+ *  Created on: 2017-12-26
+ *      Author: Young.Geo
+ */
+#ifndef __OCI_DATABASE_H__
+#define __OCI_DATABASE_H__
 
 
 

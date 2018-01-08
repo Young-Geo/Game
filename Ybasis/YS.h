@@ -8,7 +8,6 @@
 #define __YS_H__
 
 #include "Ybasis.h"
-#include "Yalone.hpp"
 #include "Ysocket.h"
 #include <event2/listener.h>
 #include <event2/bufferevent.h>
@@ -28,13 +27,14 @@ typedef struct _event_rwe_t
     event_data_call_t call_r;
     event_data_call_t call_w;
     event_data_extern_t call_ex;
+    void *arg;
 } event_rwe_t;
 
 typedef struct _entity_t
 {
     int inx;
     //pthread_t thread_id;
-    std::thread *thread_handle;
+    //std::thread *thread_handle;
     std::shared_ptr<std::thread> thread_ptr;
     struct event_base *base;
     struct event notify_event;
@@ -61,10 +61,11 @@ master_t* Master_Init();
 
 
 //封装libevent
-class YS : public alone<YS>
+class YS
 {
 public:
-    void    Init();
+    virtual bool    Init();
+public:
     void    Start();
 protected:
     bool    AddEvent(event_rwe_t call);

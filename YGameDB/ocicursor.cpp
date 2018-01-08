@@ -1,3 +1,9 @@
+/*
+ * ocicursor.cpp
+ *
+ *  Created on: 2017-12-26
+ *      Author: Young.Geo
+ */
 #include "ocicursor.h"
 #include <string.h>
 
