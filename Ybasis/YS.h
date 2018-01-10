@@ -57,18 +57,16 @@ typedef struct _master_t
 
 entity_t* Entity_Init(event_rwe_t call);
 
-master_t* Master_Init();
+master_t* Master_Init(YSOCKET::sock_addr_t addr);
 
 
 //封装libevent
 class YS
 {
 public:
-    virtual bool    Init();
-public:
-    void    Start();
-protected:
+    void    Start(YSOCKET::sock_addr_t addr);
     bool    AddEvent(event_rwe_t call);
+
 private:
     master_t *_master;
 };

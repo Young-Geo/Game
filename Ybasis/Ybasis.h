@@ -42,6 +42,8 @@ typedef std::string Ystring;
 #define Gbyte(x) (1024 * 1024 * 1024 * (x))
 #define Tbyte(x) (1024 * 1024 * 1024 * 1024 * (x))
 
+#define YINTMAX        2147483647    /* maximum (signed) int value */
+
 #define BUF_SIZE 512
 #define BUF_MIN  256
 #define BUF_MAX  1024
@@ -52,6 +54,8 @@ typedef std::string Ystring;
 #define Yzero(x,y) memset((x), 0, (y))
 #define Yfree(ptr) free((ptr))
 #define Ymalloc(size) malloc((size))
+#define Ycalloc(n,s) calloc((n), (s))
+#define Ymemcpy(dest, src, n) memcpy((dest), (src), (n))
 
 #define YYNULL(x, y) if(!(x)) return y
 #define YNULL(x) if(!(x)) return

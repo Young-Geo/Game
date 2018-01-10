@@ -25,6 +25,8 @@ bool SCheckError(MYSQL_STMT *stmt,int& errcode, char* errbuf)
 	}
 }
 
+COCICursor::COCICursor(){}
+
 
 COCICursor::COCICursor( COCIDatabase* pDb )
 {

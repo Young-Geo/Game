@@ -12,12 +12,16 @@ LIBS += ../libYbasis.so.1.0.0 -lmysqlclient -levent
 SOURCES += main.cpp \
     ocicursor.cpp \
     ocidatabase.cpp \
-    work.cpp
+    work.cpp \
+    DBYS.cpp \
+    DBconfig.cpp
 
 HEADERS += \
     ocicursor.h \
     ocidatabase.h \
-    work.h
+    work.h \
+    DBYS.h \
+    DBconfig.h
 
 
 TARGET = GameManage

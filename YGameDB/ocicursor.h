@@ -75,6 +75,7 @@ public:
 	
 	void COCICursor_init(COCIDatabase* pDb);
 
+    COCICursor();
 	COCICursor(COCIDatabase* pDb);
 	virtual ~COCICursor();
 	MYSQL_RES *result;

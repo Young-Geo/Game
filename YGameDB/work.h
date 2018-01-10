@@ -1,11 +1,17 @@
+/*
+ * work.h
+ *
+ *  Created on: 2017-12-26
+ *      Author: Young.Geo
+ */
 #ifndef __WORK_H__
 #define __WORK_H__
 
 #include "Ywork.h"
 #include "Yalone.hpp"
-#include "YS.h"
+#include "DBYS.h"
 
-class DBwork : public work, public YS, public alone<DBwork>
+class DBwork : public work, public alone<DBwork>
 {
 public:
     virtual bool		Init();

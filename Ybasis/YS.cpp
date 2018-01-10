@@ -60,7 +60,8 @@ entity_t* Entity_Init(event_rwe_t call)
     }
     std::function<void(entity_t *)> entity_Func = [=](entity_t *entity)->void
     {
-        event_base_loop(entity->base, 0);//thread--
+        //event_base_loop(entity->base, 0);//thread--
+        event_base_dispatch(entity->base);
     };
 
     //entity->thread_handle = new std::thread(std::bind(entity_Func, entity));
@@ -73,7 +74,7 @@ entity_t* Entity_Init(event_rwe_t call)
     return entity;
 }
 
-master_t* Master_Init()
+master_t* Master_Init(YSOCKET::sock_addr_t addr)
 {
     master_t *master = NULL;
 
@@ -83,7 +84,7 @@ master_t* Master_Init()
     master->last_event = -1;
 
 
-    Socket* _socket = socketTool::GetSocket(YSOCKET::SOCKET_SERVER, YSOCKET::SOCKET_STREAM_TCP, Ystring("127.0.0.1"), 9001);
+    Socket* _socket = socketTool::GetSocket(YSOCKET::SOCKET_SERVER, YSOCKET::SOCKET_STREAM_TCP, addr);
 
     master->master_base = event_base_new();
     if (!master->master_base) {
@@ -132,7 +133,8 @@ master_t* Master_Init()
 
     std::function<void(master_t *)> master_Func = [=](master_t *master)->void
     {
-        event_base_loop(master->master_base, 0);
+        //event_base_loop(master->master_base, 0);
+        event_base_dispatch(master->master_base);
     };
 
     //
@@ -149,15 +151,10 @@ master_t* Master_Init()
 
 
 //////////////////////////////////////////////////////
-bool    YS::Init()
-{
-    Yassert(_master = ::Master_Init());
-    return true;
-}
 
-void    YS::Start()
+void    YS::Start(YSOCKET::sock_addr_t addr)
 {
-    Init();
+    Yassert(_master = ::Master_Init(addr));
 }
 
 bool    YS::AddEvent(event_rwe_t call)

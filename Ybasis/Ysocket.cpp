@@ -13,12 +13,11 @@ Socket::Socket()
     this->_isInit = false;
 }
 
-Socket::Socket(YSOCKET::SOCKET_MODEL mode, YSOCKET::SOCKET_STREAM_MODEL streamMode, Ystring ip, Yint port)
+Socket::Socket(YSOCKET::SOCKET_MODEL mode, YSOCKET::SOCKET_STREAM_MODEL streamMode, YSOCKET::sock_addr_t addr)
 {
     this->_mode = mode;
     this->_streamMode = streamMode;
-    this->_ip = ip;
-    this->_port = port;
+    this->_addr = addr;
     _maxListenNum = MAXLISTENNUM;
     _fd = -1;
     this->_isInit = false;
@@ -34,14 +33,9 @@ void    Socket::SetSocketStreamModel(YSOCKET::SOCKET_STREAM_MODEL streamMode)
     this->_streamMode = streamMode;
 }
 
-void    Socket::SetSocketIp(Ystring ip)
+void    Socket::SetAddr(YSOCKET::sock_addr_t addr)
 {
-    this->_ip = ip;
-}
-
-void    Socket::SetSocketPort(Yint port)
-{
-    this->_port = port;
+    this->_addr = addr;
 }
 
 void    Socket::SetMaxListenNum(Yint num)
@@ -72,8 +66,8 @@ bool    Socket::Init()
     Yzero(&addr, sizeof(addr));
     addr.sin_family = AF_INET;
     //addr.sin_addr.s_addr = htonl(_ip);
-    inet_pton(AF_INET, _ip.c_str(), (void *)(&addr.sin_addr.s_addr));
-    addr.sin_port = htons(_port);
+    inet_pton(AF_INET, _addr._ip.c_str(), (void *)(&addr.sin_addr.s_addr));
+    addr.sin_port = htons(_addr._port);
     slen = sizeof(addr);
     if (::bind(_fd, (struct sockaddr *)&addr, slen) < 0) {
         YLOG_ERR("Socket::bind socket error %d\n", _fd);

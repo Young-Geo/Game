@@ -1,3 +1,9 @@
+/*
+ * work.cpp
+ *
+ *  Created on: 2017-12-26
+ *      Author: Young.Geo
+ */
 #include "work.h"
 
 
@@ -9,21 +15,6 @@ bool		DBwork::Init()
 
 void		DBwork::Loop()
 {
-    event_rwe_t r = { 0 };
-    auto func_r = [=](struct bufferevent *bev, void *arg)->void
-    {
-        //
-        entity_t *entity = NULL;
-        Yassert(arg);
-        entity = (entity_t *)arg;
-        entity->call.arg;
-        //
-    };
-    r.call_r = func_r;
-    for (Yint i = 0; i < 4; ++i)
-        this->AddEvent(r);
-    //
-
     while (true)
     {
         ///////
@@ -46,8 +37,8 @@ void    DBwork::Join()
 
 void    DBwork::Start()
 {
-    YS::Start();//YS start
-    work::Start();//start parent-->Loop
+    //work::Start();//start parent-->Loop
+    gDBYS->Start();
 }
 
 void    DBwork::Detach()

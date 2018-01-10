@@ -11,7 +11,9 @@ HEADERS += \
     Ytime.h \
     Yconfig.h \
     YS.h \
-    Ysocket.h
+    Ysocket.h \
+    Ymsgtool.h \
+    Ychain.h
 
 SOURCES += \
     Ybsis.cpp \
@@ -20,4 +22,6 @@ SOURCES += \
     Ytime.cpp \
     Yconfig.cpp \
     YS.cpp \
-    Ysocket.cpp
+    Ysocket.cpp \
+    Ymsgtool.cpp \
+    Ychain.cpp

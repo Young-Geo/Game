@@ -27,18 +27,22 @@ namespace YSOCKET
         SOCKET_STREAM_TCP = SOCK_STREAM,
         SOCKET_STREAM_UDP = SOCK_DGRAM,
     };
+    struct sock_addr_t
+    {
+        Ystring _ip;
+        Yint    _port;
+    };
 }
 class Socket
 {
 #define MAXLISTENNUM 128
 public:
     Socket();
-    Socket(YSOCKET::SOCKET_MODEL mode, YSOCKET::SOCKET_STREAM_MODEL streamMode, Ystring ip, Yint port);
+    Socket(YSOCKET::SOCKET_MODEL mode, YSOCKET::SOCKET_STREAM_MODEL streamMode, YSOCKET::sock_addr_t addr);
 public:
     void    SetSocketModel(YSOCKET::SOCKET_MODEL mode);
     void    SetSocketStreamModel(YSOCKET::SOCKET_STREAM_MODEL streamMode);
-    void    SetSocketIp(Ystring ip);
-    void    SetSocketPort(Yint port);
+    void    SetAddr(YSOCKET::sock_addr_t addr);
     void    SetMaxListenNum(Yint num);
     Yint    GetFd();
     //
@@ -49,8 +53,7 @@ public:
 private:
     YSOCKET::SOCKET_MODEL _mode;
     YSOCKET::SOCKET_STREAM_MODEL _streamMode;
-    Ystring     _ip;
-    Yint        _port;
+    YSOCKET::sock_addr_t _addr;
     Yint        _fd;
     Yint        _maxListenNum;
     bool        _isInit;
@@ -60,10 +63,10 @@ class socketTool
 {
 public:
     socketTool();
-    static Socket* GetSocket(YSOCKET::SOCKET_MODEL mode, YSOCKET::SOCKET_STREAM_MODEL streamMode, Ystring ip, Yint port)
+    static Socket* GetSocket(YSOCKET::SOCKET_MODEL mode, YSOCKET::SOCKET_STREAM_MODEL streamMode, YSOCKET::sock_addr_t addr)
     {
         Socket *_socket = NULL;
-        Yassert(_socket = new Socket(mode, streamMode, ip, port));
+        Yassert(_socket = new Socket(mode, streamMode, addr));
 
         if (!_socket->Init()) {
             Ydelete _socket;
