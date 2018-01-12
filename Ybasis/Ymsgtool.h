@@ -32,7 +32,7 @@ void    unpackT(T &t, Ychain_t &chain)
 struct msg
 {
     MSGPACK_DEFINE(m_id);
-    msg(Yint _id):m_id(_id), m_fd(0), m_chain(new Ychain_t()){}
+    msg(Yint _id):m_id(_id), m_fd(0){}
 
     virtual msg* Clone() = 0;
 
@@ -51,7 +51,6 @@ struct msg
     Yint m_id;
     Yint m_fd;
     bool m_isSC;
-    Ychain_t* m_chain;
 };
 
 struct msgSS : public msg
