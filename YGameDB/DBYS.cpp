@@ -19,12 +19,11 @@ void    DBYS::Start()
     addr._port  = gDBconfig->GetDBServerPort();
     YS::Start(addr);//start
 
-    auto func_r = [=] (Yint fd, Ychain_t * chain, void *arg) ->void
+    auto func_r = [=] (Yint fd, Ychain_t &chain, void *arg) ->void
     {
         DBEntity_t *_dbEntity = NULL;
         msg *_msg = NULL;
 
-        Yassert(chain);
         Yassert(_dbEntity = (DBEntity_t *)arg);
 
         _msg = gPACKAGE->ParseBuf(chain, fd);

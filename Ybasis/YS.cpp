@@ -9,10 +9,10 @@
 static void bufferevent_r(struct bufferevent *bev, void *ctx)
 {
     entity_t *entity = NULL;
-    Ychain_t *chain = NULL;
+    Ychain_t chain;
     struct evbuffer *input = NULL;
     struct evbuffer *ouput = NULL;
-    Yint _fd = -1, _dataSize = 0;
+    Yint _fd = -1, _dataSize = 0, curSize = 0;
     //unsigned char *buf = NULL;
 
     Yassert(bev);
@@ -31,10 +31,14 @@ static void bufferevent_r(struct bufferevent *bev, void *ctx)
         entity->chain->Alloc(_dataSize);
     }
 
-    evbuffer_remove(input, (void *)entity->chain->Data(), _dataSize);
+    evbuffer_remove(input, (void *)entity->chain->Data(), _dataSize);//need par
+
+
+    *entity->chain >> curSize;
+    chain.Write(entity->chain->Data()+entity->chain->GetOffset(), curSize);
 
     if (entity->call.call_r)
-        entity->call.call_r(_fd, entity->chain, entity->call.arg);
+        entity->call.call_r(_fd, chain, entity->call.arg);
 }
 
 static void bufferevent_w(struct bufferevent *bev, void *ctx)

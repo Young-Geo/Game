@@ -29,8 +29,7 @@ void    unpackT(T &t, Ychain_t &chain)
 {
     unsigned char*data = NULL;
     msgpack::unpacked _msg;
-    msgpack::unpack(&_msg, (char*)&chain, (size_t)chain.Size(), (size_t*)&chain.GetOffPos());
-
+    msgpack::unpack(&_msg, (char*)&chain, (size_t)chain.Size());
     _msg.get().convert(&t);
 }
 
@@ -39,7 +38,7 @@ class Ypackage : public alone<Ypackage>
 public:
     Ypackage();
 public:
-    msg* ParseBuf(Ychain_t *chain, Yint fd);
+    msg* ParseBuf(Ychain_t &chain, Yint fd);
 };
 
 #define gPACKAGE Ypackage::GetEntity()

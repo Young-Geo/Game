@@ -21,12 +21,16 @@ struct msg
 
     Yint m_id;
     Yint m_fd;
+    bool m_isSC;
     Ychain_t* m_chain;
 };
 
 struct msgSS : public msg
 {
-    msgSS(Yint _id) : msg(_id){}
+    msgSS(Yint _id) : msg(_id)
+    {
+        m_isSC = false;
+    }
 
     virtual msg* Clone()
     {
@@ -38,7 +42,10 @@ struct msgSS : public msg
 
 struct msgSC : public msg
 {
-    msgSC(Yint _id) : msg(_id){}
+    msgSC(Yint _id) : msg(_id)
+    {
+        m_isSC = true;
+    }
 
     virtual msg* Clone()
     {

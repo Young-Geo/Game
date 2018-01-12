@@ -21,7 +21,7 @@
 
 #define WORK_THREAD 4
 
-typedef void (*event_function_r)(Yint, Ychain_t *, void *);
+typedef void (*event_function_r)(Yint, Ychain_t &, void *);
 typedef void (*event_function_w)(Yint, void *);
 typedef void (*event_function_e)(Yint, Yshort, void *);
 
