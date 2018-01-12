@@ -10,14 +10,43 @@
 #include "Yalone.hpp"
 #include "Ybasis.h"
 #include "Ychain.hpp"
+#include <msgpack.hpp>
+
+template <typename T>
+void    packT(T &t, Ychain_t &chain)
+{
+    msgpack::sbuffer buffer_;
+    msgpack::packer<msgpack::sbuffer>  pack_(&buffer_);
+    pack_.pack(t);//序列化对象//T need MSGPACK_DEFINE
+    chain.Write((void *)buffer_.data(), buffer_.size());
+}
+
+template <typename T>
+void    unpackT(T &t, Ychain_t &chain)
+{
+    msgpack::unpacked _msg;
+    msgpack::unpack(&_msg, (char*)&chain, (size_t)chain.Size());
+    _msg.get().convert(&t);//T need MSGPACK_DEFINE
+}
 
 struct msg
 {
+    MSGPACK_DEFINE(m_id);
     msg(Yint _id):m_id(_id), m_fd(0), m_chain(new Ychain_t()){}
 
     virtual msg* Clone() = 0;
 
-    virtual Ychain_t*   GetSendBuf() = 0;
+    virtual bool    Read(Ychain_t &chain)
+    {
+        unpackT<msg>(*this, chain);
+        return true;
+    }
+
+    virtual bool    Write(Ychain_t &chain)
+    {
+        packT<msg>(*this, chain);
+        return true;
+    }
 
     Yint m_id;
     Yint m_fd;
@@ -36,8 +65,6 @@ struct msgSS : public msg
     {
         return new msgSS(m_id);
     }
-
-    virtual Ychain_t*   GetSendBuf();
 };
 
 struct msgSC : public msg
@@ -51,8 +78,6 @@ struct msgSC : public msg
     {
         return new msgSC(m_id);
     }
-
-    virtual Ychain_t*   GetSendBuf();
 };
 
 class msgTool : public alone<msgTool>

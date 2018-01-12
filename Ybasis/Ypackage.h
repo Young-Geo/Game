@@ -14,24 +14,6 @@
 #include "Ymsgtool.h"
 #include <msgpack.hpp>
 
-template <typename T>
-void    packT(T t, Ychain_t &chain)
-{
-    Yassert(chain);
-    msgpack::sbuffer buffer_;
-    msgpack::packer<msgpack::sbuffer>  pack_(&buffer_);
-    pack_.pack(t);//序列化对象
-    chain.Write((void *)buffer_.data(), buffer_.size());
-}
-
-template <typename T>
-void    unpackT(T &t, Ychain_t &chain)
-{
-    unsigned char*data = NULL;
-    msgpack::unpacked _msg;
-    msgpack::unpack(&_msg, (char*)&chain, (size_t)chain.Size());
-    _msg.get().convert(&t);
-}
 
 class Ypackage : public alone<Ypackage>
 {

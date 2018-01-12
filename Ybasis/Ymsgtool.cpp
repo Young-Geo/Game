@@ -8,17 +8,6 @@
 #include "Ymsgtool.h"
 #include "Ylog.h"
 
-Ychain_t*   msgSS::GetSendBuf()
-{
-    return this->m_chain;
-}
-
-Ychain_t*   msgSC::GetSendBuf()
-{
-    return this->m_chain;
-}
-
-
 msgTool::msgTool(){}
 
 bool    msgTool::Register(msg *_msg)
@@ -26,6 +15,7 @@ bool    msgTool::Register(msg *_msg)
     if (_msgMap.find(_msg->m_id) == _msgMap.end()) {
         this->_msgMap[_msg->m_id] = _msg;
     }
+    return true;
 }
 
 msg*    msgTool::CreateMsg(Yint id)
