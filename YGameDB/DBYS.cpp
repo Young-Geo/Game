@@ -6,6 +6,8 @@
  */
 #include "DBYS.h"
 #include "DBconfig.h"
+#include "Ypackage.h"
+#include "work.h"
 
 DBYS::DBYS(){}
 
@@ -17,17 +19,19 @@ void    DBYS::Start()
     addr._port  = gDBconfig->GetDBServerPort();
     YS::Start(addr);//start
 
-    auto func_r = [=](struct bufferevent *bev, void *arg)->void
+    auto func_r = [=] (Yint fd, Ychain_t * chain, void *arg) ->void
     {
-        //
-        entity_t *entity = NULL;
-        DBEntity_t *dbEntity = NULL;
+        DBEntity_t *_dbEntity = NULL;
+        msg *_msg = NULL;
 
-        Yassert(arg);
-        entity = (entity_t *)arg;
-        Yassert(entity->call.arg);
-        dbEntity = (DBEntity_t *)entity->call.arg;
-        //
+        Yassert(chain);
+        Yassert(_dbEntity = (DBEntity_t *)arg);
+
+        _msg = gPACKAGE->ParseBuf(chain, fd);
+        if (!_msg) {
+            return;
+        }
+        gWORK->Push(_msg);
     };
 
     for (Yint i = 0; i < gDBconfig->GetNumDB(); ++i)
@@ -36,7 +40,7 @@ void    DBYS::Start()
         Yassert(dbEntity = new DBEntity_t(gDBconfig->GetDBSID(), gDBconfig->GetDBUSR(), gDBconfig->GetDBPWD()));
         _dbEntitys.push_back(dbEntity);
 
-        event_rwe_t r = { 0 };
+        event_rwe_t r;
         r.call_r = func_r;
         r.arg = dbEntity;
         this->AddEvent(r);

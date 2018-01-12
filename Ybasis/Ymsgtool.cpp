@@ -8,6 +8,17 @@
 #include "Ymsgtool.h"
 #include "Ylog.h"
 
+Ychain_t*   msgSS::GetSendBuf()
+{
+    return this->m_chain;
+}
+
+Ychain_t*   msgSC::GetSendBuf()
+{
+    return this->m_chain;
+}
+
+
 msgTool::msgTool(){}
 
 bool    msgTool::Register(msg *_msg)

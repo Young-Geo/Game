@@ -44,6 +44,7 @@ typedef struct _Ychain_t
 Yint        Ychain_buffer_insert(Ychain_t *chain, buffer_t*buffer);
 
 Ychain_t*   Ychain_init();
+Yint        Ychain_destory(Ychain_t *chain);
 
 Yint        Ychain_add(Ychain_t *chain, void *data, Yint datalen);
 Yint        Ychain_get(Ychain_t *chain, void *data, Yint datalen);

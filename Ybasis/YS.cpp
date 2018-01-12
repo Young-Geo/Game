@@ -6,6 +6,64 @@
  */
 #include "YS.h"
 
+static void bufferevent_r(struct bufferevent *bev, void *ctx)
+{
+    entity_t *entity = NULL;
+    Ychain_t *chain = NULL;
+    struct evbuffer *input = NULL;
+    struct evbuffer *ouput = NULL;
+    Yint _fd = -1, _dataSize = 0;
+    unsigned char *buf = NULL;
+
+    Yassert(bev);
+    Yassert(entity = (entity_t *)ctx);
+    //
+
+    Yassert(input = bufferevent_get_input(bev));
+    Yassert(ouput = bufferevent_get_output(bev));
+    _fd = bufferevent_getfd(bev);
+
+    _dataSize = evbuffer_get_length(input);
+    Yassert(buf = (unsigned char *)Ycalloc(1, (_dataSize + 1)));
+
+    evbuffer_remove(input, (void *)buf, _dataSize);
+    Ychain_add(entity->chain, (void *)buf, _dataSize);
+    Yfree(buf);
+
+    if (entity->call.call_r)
+        entity->call.call_r(_fd, entity->chain, entity->call.arg);
+}
+
+static void bufferevent_w(struct bufferevent *bev, void *ctx)
+{
+    entity_t *entity = NULL;
+    Yint _fd = -1;
+
+    Yassert(bev);
+    Yassert(entity = (entity_t *)ctx);
+
+    _fd = bufferevent_getfd(bev);
+
+    if (entity->call.call_w)
+        entity->call.call_w(_fd, entity->call.arg);
+
+}
+
+static void bufferevent_event(struct bufferevent *bev, short what, void *ctx)
+{
+    entity_t *entity = NULL;
+    Yint _fd = -1;
+
+    Yassert(bev);
+    Yassert(entity = (entity_t *)ctx);
+
+    _fd = bufferevent_getfd(bev);
+
+    if (entity->call.call_e)
+        entity->call.call_e(_fd, what, entity->call.arg);
+}
+
+
 entity_t* Entity_Init(event_rwe_t call)
 {
     entity_t *entity = NULL;
@@ -21,7 +79,7 @@ entity_t* Entity_Init(event_rwe_t call)
 
     entity->notify_receive_fd = pfd[0];
     entity->notify_send_fd = pfd[1];
-
+    Yassert(entity->chain = Ychain_init());
     entity->call = call;
 
     if (!(entity->base = event_base_new())) {
@@ -29,7 +87,7 @@ entity_t* Entity_Init(event_rwe_t call)
         return NULL;
     }
 
-    event_call_t EntityWorkFunc = [=] (Yint fd, Yshort which, void *arg)->void
+    event_callback_fn EntityWorkFunc = [=] (Yint fd, Yshort which, void *arg)->void
     {
         //master send fd .. this rec
         Yint cfd = 0, count = 0;
@@ -45,7 +103,7 @@ entity_t* Entity_Init(event_rwe_t call)
         }
         //cfd par
         bev = bufferevent_socket_new(entity->base, cfd, BEV_OPT_CLOSE_ON_FREE);
-        bufferevent_setcb(bev, entity->call.call_r, entity->call.call_w, entity->call.call_ex, entity);//r w error
+        bufferevent_setcb(bev, bufferevent_r, bufferevent_w, bufferevent_event, entity);//r w error
         bufferevent_enable(bev, EV_READ|EV_WRITE);
 
         ++entity->conn_num;
@@ -93,7 +151,7 @@ master_t* Master_Init(YSOCKET::sock_addr_t addr)
     }
 
     //std::function<void(Yint, Yshort, void *)> MasterWorkFunc = [=] (Yint fd, Yshort which, void *arg)->void
-    event_call_t MasterWorkFunc = [=] (Yint fd, Yshort which, void *arg)->void
+    event_callback_fn MasterWorkFunc = [=] (Yint fd, Yshort which, void *arg)->void
     {
         //an 应该接受链接 分配到不同的event
 
@@ -167,4 +225,9 @@ bool    YS::AddEvent(event_rwe_t call)
     Yassert(entity = ::Entity_Init(call));
     _master->_entitys.push_back(entity);
     return true;
+}
+
+bool    YS::AddWorkEvent(event_function_r call_r, event_function_w call_w, event_function_e call_e, void *arg)
+{
+
 }

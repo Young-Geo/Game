@@ -45,3 +45,23 @@ void    DBwork::Detach()
 {
     work::Detach();
 }
+
+
+void    DBwork::HandleWork(msg *_msg)
+{
+    Yassert(_msg);
+
+    switch (_msg->m_id) {
+    case MSG_C_2_S_LOGIN:
+        HandleWorkLogin((msgC2SLogin *)_msg);
+        break;
+    default:
+        break;
+    }
+}
+
+void    DBwork::HandleWorkLogin(msgC2SLogin *_msg)
+{
+    Yassert(_msg);
+    YLOG_BUG("HandleWorkLogin");
+}

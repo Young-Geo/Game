@@ -10,6 +10,7 @@
 #include "Ywork.h"
 #include "Yalone.hpp"
 #include "DBYS.h"
+#include "Ymsgtool.h"
 
 class DBwork : public work, public alone<DBwork>
 {
@@ -21,6 +22,9 @@ public:
     void    Start();
     void    Join();
     void    Detach();
+public:
+    void    HandleWork(msg *_msg);
+    void    HandleWorkLogin(msgC2SLogin *_msg);
 };
 
 #define gWORK DBwork::GetEntity()

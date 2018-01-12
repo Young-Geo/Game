@@ -9,6 +9,7 @@
 
 #include "Ybasis.h"
 #include "Ysocket.h"
+#include "Ychain.h"
 #include <event2/listener.h>
 #include <event2/bufferevent.h>
 #include <event2/buffer.h>
@@ -16,18 +17,27 @@
 #include <event2/event_struct.h>
 #include <event2/event_compat.h>
 
+#include <functional>
+
 #define WORK_THREAD 4
 
-typedef event_callback_fn event_call_t;
-typedef bufferevent_data_cb event_data_call_t;
-typedef bufferevent_event_cb event_data_extern_t;
+typedef void (*event_function_r)(Yint, Ychain_t *, void *);
+typedef void (*event_function_w)(Yint, void *);
+typedef void (*event_function_e)(Yint, Yshort, void *);
 
 typedef struct _event_rwe_t
 {
-    event_data_call_t call_r;
-    event_data_call_t call_w;
-    event_data_extern_t call_ex;
+    event_function_r call_r;
+    event_function_w call_w;
+    event_function_e call_e;
     void *arg;
+    _event_rwe_t()
+    {
+        call_r = NULL;
+        call_w = NULL;
+        call_e = NULL;
+        arg    = NULL;
+    }
 } event_rwe_t;
 
 typedef struct _entity_t
@@ -41,6 +51,7 @@ typedef struct _entity_t
     int notify_receive_fd;
     int notify_send_fd;
     int conn_num;
+    Ychain_t *chain;
     event_rwe_t call;
 } entity_t;
 
@@ -66,7 +77,7 @@ class YS
 public:
     void    Start(YSOCKET::sock_addr_t addr);
     bool    AddEvent(event_rwe_t call);
-
+    bool    AddWorkEvent(event_function_r call_r, event_function_w call_w, event_function_e call_e, void *arg);
 private:
     master_t *_master;
 };

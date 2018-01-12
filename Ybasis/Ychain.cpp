@@ -25,7 +25,9 @@ buffer_t*   buffer_new(Yint size)
 Yint        buffer_free(buffer_t *buffer)
 {
     Yassert(buffer);
-
+    if (buffer->buffer)
+        Yfree(buffer->buffer);
+    Yfree(buffer);
     return 0;
 }
 
@@ -57,6 +59,23 @@ Ychain_t*   Ychain_init()
     chain->refcnt = 1;
     chain->last_with_datap = &chain->first;
     return chain;
+}
+
+Yint        Ychain_destory(Ychain_t *chain)
+{
+    Yassert(chain);
+    buffer_t *buffer = NULL, *tempBuf = NULL;
+
+    for (buffer = chain->first; buffer; buffer = tempBuf)
+    {
+        tempBuf = buffer->next;
+
+        buffer_free(buffer);
+    }
+
+    Yfree(chain);
+
+    return 0;
 }
 
 Yint        Ychain_add(Ychain_t *chain, void *data_in, Yint datalen)

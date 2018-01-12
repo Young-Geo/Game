@@ -6,6 +6,7 @@ CONFIG -= qt
 QT += Ybasis
 
 INCLUDEPATH += ../Ybasis
+#SOURCES += ../Ybasis
 
 LIBS += ../libYbasis.so.1.0.0 -lmysqlclient -levent
 

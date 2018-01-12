@@ -13,7 +13,8 @@ HEADERS += \
     YS.h \
     Ysocket.h \
     Ymsgtool.h \
-    Ychain.h
+    Ychain.h \
+    Ypackage.h
 
 SOURCES += \
     Ybsis.cpp \
@@ -24,4 +25,5 @@ SOURCES += \
     YS.cpp \
     Ysocket.cpp \
     Ymsgtool.cpp \
-    Ychain.cpp
+    Ychain.cpp \
+    Ypackage.cpp

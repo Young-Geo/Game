@@ -47,6 +47,7 @@ typedef std::string Ystring;
 #define BUF_SIZE 512
 #define BUF_MIN  256
 #define BUF_MAX  1024
+#define BUF_MMAX 1024 * 1024
 
 #define Ynew new
 #define Ydelete delete
