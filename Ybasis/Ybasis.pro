@@ -3,6 +3,7 @@ CONFIG += console c++11
 CONFIG -= app_bundle
 CONFIG -= qt
 TARGET = ../Ybasis
+LIBS += -lmsgpack
 HEADERS += \
     Ybasis.h \
     Ywork.h \
@@ -13,8 +14,8 @@ HEADERS += \
     YS.h \
     Ysocket.h \
     Ymsgtool.h \
-    Ychain.h \
-    Ypackage.h
+    Ypackage.h \
+    Ychain.hpp
 
 SOURCES += \
     Ybsis.cpp \
@@ -25,5 +26,4 @@ SOURCES += \
     YS.cpp \
     Ysocket.cpp \
     Ymsgtool.cpp \
-    Ychain.cpp \
     Ypackage.cpp

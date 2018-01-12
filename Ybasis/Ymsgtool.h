@@ -9,11 +9,11 @@
 
 #include "Yalone.hpp"
 #include "Ybasis.h"
-#include "Ychain.h"
+#include "Ychain.hpp"
 
 struct msg
 {
-    msg(Yint _id):m_id(_id), m_fd(0), m_chain(Ychain_init()){}
+    msg(Yint _id):m_id(_id), m_fd(0), m_chain(new Ychain_t()){}
 
     virtual msg* Clone() = 0;
 

@@ -40,10 +40,7 @@ void    DBYS::Start()
         Yassert(dbEntity = new DBEntity_t(gDBconfig->GetDBSID(), gDBconfig->GetDBUSR(), gDBconfig->GetDBPWD()));
         _dbEntitys.push_back(dbEntity);
 
-        event_rwe_t r;
-        r.call_r = func_r;
-        r.arg = dbEntity;
-        this->AddEvent(r);
+        this->AddWorkEvent(func_r, NULL, NULL, dbEntity);
     }
     //
 }

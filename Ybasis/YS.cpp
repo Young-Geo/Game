@@ -13,7 +13,7 @@ static void bufferevent_r(struct bufferevent *bev, void *ctx)
     struct evbuffer *input = NULL;
     struct evbuffer *ouput = NULL;
     Yint _fd = -1, _dataSize = 0;
-    unsigned char *buf = NULL;
+    //unsigned char *buf = NULL;
 
     Yassert(bev);
     Yassert(entity = (entity_t *)ctx);
@@ -24,11 +24,14 @@ static void bufferevent_r(struct bufferevent *bev, void *ctx)
     _fd = bufferevent_getfd(bev);
 
     _dataSize = evbuffer_get_length(input);
-    Yassert(buf = (unsigned char *)Ycalloc(1, (_dataSize + 1)));
+    //Yassert(buf = (unsigned char *)Ycalloc(1, (_dataSize + 1)));
 
-    evbuffer_remove(input, (void *)buf, _dataSize);
-    Ychain_add(entity->chain, (void *)buf, _dataSize);
-    Yfree(buf);
+    if ((entity->chain->Capacity()-entity->chain->Size()) < _dataSize) {
+        //need rwrite
+        entity->chain->Alloc(_dataSize);
+    }
+
+    evbuffer_remove(input, (void *)entity->chain->Data(), _dataSize);
 
     if (entity->call.call_r)
         entity->call.call_r(_fd, entity->chain, entity->call.arg);
@@ -79,7 +82,7 @@ entity_t* Entity_Init(event_rwe_t call)
 
     entity->notify_receive_fd = pfd[0];
     entity->notify_send_fd = pfd[1];
-    Yassert(entity->chain = Ychain_init());
+    Yassert(entity->chain = new Ychain_t());
     entity->call = call;
 
     if (!(entity->base = event_base_new())) {
@@ -229,5 +232,11 @@ bool    YS::AddEvent(event_rwe_t call)
 
 bool    YS::AddWorkEvent(event_function_r call_r, event_function_w call_w, event_function_e call_e, void *arg)
 {
+    event_rwe_t rwe;
 
+    rwe.call_r = call_r;
+    rwe.call_w = call_w;
+    rwe.call_e = call_e;
+    rwe.arg = arg;
+    return this->AddEvent(rwe);
 }
