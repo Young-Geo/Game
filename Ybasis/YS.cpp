@@ -26,19 +26,20 @@ static void bufferevent_r(struct bufferevent *bev, void *ctx)
     _dataSize = evbuffer_get_length(input);
     //Yassert(buf = (unsigned char *)Ycalloc(1, (_dataSize + 1)));
 
-    if ((entity->chain->Capacity()-entity->chain->Size()) < _dataSize) {
+    if (entity->chain->GetSurPlusSize() < _dataSize) {
         //need rwrite
-        entity->chain->Alloc(_dataSize);
+        entity->chain->AddSizeAndOldWrite(_dataSize);//add size
     }
 
-    evbuffer_remove(input, (void *)entity->chain->Data(), _dataSize);//need par
+    evbuffer_remove(input, (void *)entity->chain->Data()+entity->chain->Size(), _dataSize);//need par
 
 
     *entity->chain >> curSize;
     chain.Write(entity->chain->Data()+entity->chain->GetOffset(), curSize);
+    entity->chain->Cut(curSize + sizeof(curSize));//buf qian yi size
 
     if (entity->call.call_r)
-        entity->call.call_r(_fd, chain, entity->call.arg);
+        entity->call.call_r(SocketClient(bev, 0), chain, entity->call.arg);
 }
 
 static void bufferevent_w(struct bufferevent *bev, void *ctx)
@@ -52,7 +53,7 @@ static void bufferevent_w(struct bufferevent *bev, void *ctx)
     _fd = bufferevent_getfd(bev);
 
     if (entity->call.call_w)
-        entity->call.call_w(_fd, entity->call.arg);
+        entity->call.call_w(SocketClient(bev, 0), entity->call.arg);
 
 }
 
@@ -67,7 +68,7 @@ static void bufferevent_event(struct bufferevent *bev, short what, void *ctx)
     _fd = bufferevent_getfd(bev);
 
     if (entity->call.call_e)
-        entity->call.call_e(_fd, what, entity->call.arg);
+        entity->call.call_e(SocketClient(bev, 0), what, entity->call.arg);
 }
 
 

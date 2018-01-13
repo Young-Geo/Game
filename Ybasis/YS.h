@@ -10,6 +10,7 @@
 #include "Ybasis.h"
 #include "Ysocket.h"
 #include "Ychain.hpp"
+#include "YSocketClient.h"
 #include <event2/listener.h>
 #include <event2/bufferevent.h>
 #include <event2/buffer.h>
@@ -21,9 +22,9 @@
 
 #define WORK_THREAD 4
 
-typedef void (*event_function_r)(Yint, Ychain_t &, void *);
-typedef void (*event_function_w)(Yint, void *);
-typedef void (*event_function_e)(Yint, Yshort, void *);
+typedef void (*event_function_r)(SocketClient sock, Ychain_t &, void *);
+typedef void (*event_function_w)(SocketClient sock, void *);
+typedef void (*event_function_e)(SocketClient sock, Yshort, void *);
 
 typedef struct _event_rwe_t
 {

@@ -10,7 +10,9 @@ msg* Ypackage::ParseBuf(Ychain_t &chain, Yint fd)
     _msg = gMSGTOOL->CreateMsg(_id);
 
     _msg->m_fd = fd;
-    chain = chain;
+
+    if (!_msg->Read(chain))
+        return nullptr;
 
     return _msg;
 }

@@ -47,12 +47,34 @@ public:
         return m_pData;
     }
 
+    void*  AddSizeAndOldWrite(unsigned long dwSize)
+    {
+        int _size = -1;
+        char *_data = NULL;
+
+        _size = BUFF_SIZE*((m_curPos + dwSize)/BUFF_SIZE + 1);
+
+        if(this->DataSize() > 0)
+        {
+            Yassert(_data = new char[this->DataSize()]);
+            this->Read(_data, this->DataSize());
+            this->Alloc(_size);
+            this->Write(_data, strlen(_data));
+        }
+        return m_pData;
+    }
+
     /*
     *	brief 获取LBuff的起始指针
     */
     char* Data()const
     {
         return m_pData;
+    }
+
+    int GetSurPlusSize()
+    {
+        return m_size - m_curPos;
     }
 
     /*
@@ -69,6 +91,11 @@ public:
     int   Size()const
     {
         return m_curPos;
+    }
+
+    int DataSize()const
+    {
+        return m_curPos - m_offset;
     }
 
     /*
