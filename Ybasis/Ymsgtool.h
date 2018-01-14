@@ -10,6 +10,7 @@
 #include "Yalone.hpp"
 #include "Ybasis.h"
 #include "Ychain.hpp"
+#include "YSocketClient.h"
 #include <msgpack.hpp>
 
 template <typename T>
@@ -31,28 +32,36 @@ void    unpackT(T &t, Ychain_t &chain)
 
 struct msg
 {
-    MSGPACK_DEFINE(m_id);
-    msg(Yint _id):m_id(_id), m_fd(0){}
+    //MSGPACK_DEFINE(m_id);
+    msg(Yint _id):m_id(_id){}
 
     virtual msg* Clone() = 0;
 
-    virtual bool    Read(Ychain_t &chain)
-    {
+    virtual bool    Read(Ychain_t &chain) = 0;
+    /*{
         unpackT<msg>(*this, chain);
         return true;
-    }
+    }*/
 
-    virtual bool    Write(Ychain_t &chain)
-    {
+    virtual bool    Write(Ychain_t &chain) = 0;
+    /*{
         packT<msg>(*this, chain);
         return true;
+    }*/
+
+    Ychain_t    GetSendBuf()
+    {
+        Ychain_t chain;
+        chain << m_id;
+        Write(chain);
+        return chain;
     }
 
     Yint m_id;
-    Yint m_fd;
-    bool m_isSC;
+    SocketClient m_sock;
 };
 
+/*
 struct msgSS : public msg
 {
     msgSS(Yint _id) : msg(_id)
@@ -78,6 +87,7 @@ struct msgSC : public msg
         return new msgSC(m_id);
     }
 };
+*/
 
 class msgTool : public alone<msgTool>
 {
@@ -99,9 +109,23 @@ enum msgID
 };
 
 
-struct msgC2SLogin : public msgSC
+struct msgC2SLogin : public msg
 {
-    msgC2SLogin() : msgSC(MSG_C_2_S_LOGIN){}
+    Yint m_userId;
+    MSGPACK_DEFINE(m_userId);
+    msgC2SLogin() : msg(MSG_C_2_S_LOGIN){}
+
+    virtual bool    Read(Ychain_t &chain)
+    {
+        unpackT<msgC2SLogin>(*this, chain);
+        return true;
+    }
+
+    virtual bool    Write(Ychain_t &chain)
+    {
+        packT<msgC2SLogin>(*this, chain);
+        return true;
+    }
 
     virtual msg* Clone(){return new msgC2SLogin();}
 };

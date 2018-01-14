@@ -22,13 +22,13 @@ class SocketClient
 {
 public:
     SocketClient();
-    SocketClient(bufferevent *_ptr, Yint flag);
+    SocketClient(bufferevent *_ptr);
     SocketClient(struct event_base *base, Yint _fd, Yint opt);
     ~SocketClient();
 public:
     Yint    GetFd();
+    void    Destory();
 private:
-    Yint         m_flag;
     bufferevent *m_SockPtr;
     Socket      *m_socket;
     bool         m_isbuff;

@@ -50,6 +50,7 @@ public:
     bool    Listen();
     bool    IsS();
     bool    IsC();
+    void    Destory();
 private:
     YSOCKET::SOCKET_MODEL _mode;
     YSOCKET::SOCKET_STREAM_MODEL _streamMode;

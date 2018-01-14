@@ -27,11 +27,11 @@ void    DBYS::Start()
 
         Yassert(_dbEntity = (DBEntity_t *)arg);
 
-        _msg = gPACKAGE->ParseBuf(chain, sockClient.GetFd());
+        _msg = gPACKAGE->ParseBuf(chain, sockClient);
         if (!_msg) {
             return;
         }
-        gWORK->Push(_msg);
+        gWORK->Push(new workStruct(_msg, _dbEntity));
     };
 
     for (Yint i = 0; i < gDBconfig->GetNumDB(); ++i)

@@ -39,7 +39,7 @@ static void bufferevent_r(struct bufferevent *bev, void *ctx)
     entity->chain->Cut(curSize + sizeof(curSize));//buf qian yi size
 
     if (entity->call.call_r)
-        entity->call.call_r(SocketClient(bev, 0), chain, entity->call.arg);
+        entity->call.call_r(SocketClient(bev), chain, entity->call.arg);
 }
 
 static void bufferevent_w(struct bufferevent *bev, void *ctx)
@@ -53,7 +53,7 @@ static void bufferevent_w(struct bufferevent *bev, void *ctx)
     _fd = bufferevent_getfd(bev);
 
     if (entity->call.call_w)
-        entity->call.call_w(SocketClient(bev, 0), entity->call.arg);
+        entity->call.call_w(SocketClient(bev), entity->call.arg);
 
 }
 
@@ -68,7 +68,7 @@ static void bufferevent_event(struct bufferevent *bev, short what, void *ctx)
     _fd = bufferevent_getfd(bev);
 
     if (entity->call.call_e)
-        entity->call.call_e(SocketClient(bev, 0), what, entity->call.arg);
+        entity->call.call_e(SocketClient(bev), what, entity->call.arg);
 }
 
 

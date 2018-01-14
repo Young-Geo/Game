@@ -15,8 +15,8 @@
 
 class Buff
 {
-private:
-    Buff(const Buff&);
+//private:
+    //Buff(const Buff&);
 
 public:
 
@@ -31,6 +31,10 @@ public:
         {
             delete[] m_pData;
         }
+    }
+    Buff(const Buff&buf)
+    {
+        *this = buf;
     }
     /*
     *	brief 重新初始化

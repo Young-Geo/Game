@@ -106,6 +106,12 @@ bool    Socket::IsC()
     return this->_mode == YSOCKET::SOCKET_CLIENT;
 }
 
+void    Socket::Destory()
+{
+    if (_fd > 0)
+        close(_fd);
+}
+
 
 ///////////////////////////////////////////////////////
 socketTool::socketTool(){}

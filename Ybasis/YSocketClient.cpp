@@ -6,30 +6,40 @@
  */
 #include "YSocketClient.h"
 
-SocketClient::SocketClient(){}
-
-SocketClient::SocketClient(bufferevent *ptr, Yint flag)
+SocketClient::SocketClient()
 {
-    m_SockPtr = ptr;
-    m_flag    = flag;
-    m_isbuff = true;
+    m_SockPtr   = NULL;
+    m_isbuff    = NULL;
+    m_socket    = NULL;
+}
+
+SocketClient::SocketClient(bufferevent *ptr)
+{
+    m_SockPtr   = ptr;
+    m_isbuff    = true;
+    m_socket    = NULL;
 }
 
 SocketClient::SocketClient(struct event_base *base, Yint _fd, Yint opt)
 {
-    m_flag = 1;
     m_isbuff = true;
     m_SockPtr = bufferevent_socket_new(base, _fd, opt);
 }
 
-SocketClient::~SocketClient()
-{
-    if (m_SockPtr && m_flag && m_isbuff) {
-        bufferevent_free(m_SockPtr);
-    }
-}
+SocketClient::~SocketClient(){}
 
 Yint        SocketClient::GetFd()
 {
     return bufferevent_getfd(m_SockPtr);
+}
+
+void        SocketClient::Destory()
+{
+    if (m_SockPtr && m_isbuff) {
+        bufferevent_free(m_SockPtr);
+    }
+
+    if (m_SockPtr && !m_isbuff) {
+        m_socket->Destory();
+    }
 }

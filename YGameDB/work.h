@@ -12,6 +12,17 @@
 #include "DBYS.h"
 #include "Ymsgtool.h"
 
+struct workStruct
+{
+    msg* _msg;
+    DBEntity_t *_dbEntity;
+    workStruct(msg* msg, DBEntity_t *dbEntity)
+    {
+        this->_msg = msg;
+        this->_dbEntity = dbEntity;
+    }
+};
+
 class DBwork : public work, public alone<DBwork>
 {
 public:
@@ -23,8 +34,8 @@ public:
     void    Join();
     void    Detach();
 public:
-    void    HandleWork(msg *_msg);
-    void    HandleWorkLogin(msgC2SLogin *_msg);
+    void    HandleWork(msg *_msg, DBEntity_t *_dbEntity);
+    void    HandleWorkLogin(msgC2SLogin *_msg, DBEntity_t *_dbEntity);
 };
 
 #define gWORK DBwork::GetEntity()

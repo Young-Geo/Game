@@ -12,6 +12,7 @@
 #include "Yalone.hpp"
 #include "Ychain.hpp"
 #include "Ymsgtool.h"
+#include "YSocketClient.h"
 #include <msgpack.hpp>
 
 
@@ -20,7 +21,7 @@ class Ypackage : public alone<Ypackage>
 public:
     Ypackage();
 public:
-    msg* ParseBuf(Ychain_t &chain, Yint fd);
+    msg* ParseBuf(Ychain_t &chain, SocketClient sock);
 };
 
 #define gPACKAGE Ypackage::GetEntity()
