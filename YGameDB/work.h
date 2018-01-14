@@ -34,8 +34,8 @@ public:
     void    Join();
     void    Detach();
 public:
-    void    HandleWork(msg *_msg, DBEntity_t *_dbEntity);
-    void    HandleWorkLogin(msgC2SLogin *_msg, DBEntity_t *_dbEntity);
+    void    HandleWork(workStruct *ws);
+    void    HandleWorkLogin(workStruct *ws);
 };
 
 #define gWORK DBwork::GetEntity()

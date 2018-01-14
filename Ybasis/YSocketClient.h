@@ -24,13 +24,14 @@ public:
     SocketClient();
     SocketClient(bufferevent *_ptr);
     SocketClient(struct event_base *base, Yint _fd, Yint opt);
+    SocketClient(Socket *socket);
     ~SocketClient();
 public:
     Yint    GetFd();
     void    Destory();
 private:
-    bufferevent *m_SockPtr;
-    Socket      *m_socket;
+    bufferevent *m_socketBuf;
+    Socket      *m_socketFd;
     bool         m_isbuff;
 };
 
