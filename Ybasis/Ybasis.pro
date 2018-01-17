@@ -20,7 +20,6 @@ HEADERS += \
     Yuser.h
 
 SOURCES += \
-    Ybsis.cpp \
     Ywork.cpp \
     Ylog.cpp \
     Ytime.cpp \
@@ -30,4 +29,5 @@ SOURCES += \
     Ymsgtool.cpp \
     Ypackage.cpp \
     YSocketClient.cpp \
-    Yuser.cpp
+    Yuser.cpp \
+    Ybasis.cpp
