@@ -210,7 +210,7 @@ master_t* Master_Init(YSOCKET::sock_addr_t addr)
 
     master->thread_ptr->detach();
 
-    return 0;
+    return master;
 }
 
 
