@@ -46,7 +46,7 @@ void    Yenet::Destory()
     enet_host_destroy(_handle);
 }
 
-void    Yenet::Run()
+void    Yenet::Run(Yint i)
 {
 
 }
@@ -63,11 +63,15 @@ void    Yenet::Loop(Yint workNum)
     for (Yint i = 0 ; i < workNum; ++i)
     {
         std::shared_ptr<std::thread> ptr;
-        ptr = std::make_shared<std::thread>(std::bind(&Yenet::Run, this));
+        std::queue<void *> _que;
+        std::mutex  _mute;
+        ptr = std::make_shared<std::thread>(std::bind(&Yenet::Run, this, i));
         if (!ptr)
             continue;
         ptr->detach();
         thread_Ptrs.push_back(ptr);
+        _messages.push_back(_que);
+        //_mutex.push_back(_mute);//need geng gai
     }
     /* Wait up to 1000 milliseconds for an event. */
     while (true)
@@ -85,18 +89,28 @@ void    Yenet::Loop(Yint workNum)
                 /* Store any relevant client information here. */
                 event.peer -> data = (void *)"Client information";
 
-                _work[event.peer] = ++workFlag % workNum;
+                workFlag = ++workFlag % workNum;
+                _work[event.peer] = workFlag;
             }
             break;
         case ENET_EVENT_TYPE_RECEIVE:
-            printf ("A packet of length %u containing %s was received from %s on channel %u.\n",
-                    event.packet -> dataLength,
-                    event.packet -> data,
-                    event.peer -> data,
-                    event.channelID);
-            /* Clean up the packet now that we're done using it. */
-            //push work chuli
-            enet_packet_destroy(event.packet);
+            {
+                printf ("A packet of length %u containing %s was received from %s on channel %u.\n",
+                        event.packet -> dataLength,
+                        event.packet -> data,
+                        event.peer -> data,
+                        event.channelID);
+                /* Clean up the packet now that we're done using it. */
+                //push work chuli
+                //enet_packet_destroy(event.packet);
+
+                if (_work.find(event.peer) != _work.end()) {
+                    //
+                    _mutex[_work[event.peer]].lock();
+                    _messages[_work[event.peer]].push(event.packet);
+                    _mutex[_work[event.peer]].unlock();
+                }
+            }
 
             break;
 

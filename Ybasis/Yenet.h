@@ -27,13 +27,15 @@ public:
 
     void    Loop(Yint workNum);
 
-    void    Run();
+    void    Run(Yint i);
 
 private:
     ENetHost *_handle;
     ENET    _model;
     std::map<ENetPeer *, Yint> _work;
     std::vector<std::shared_ptr<std::thread>> thread_Ptrs;
+    std::vector<std::queue<void *>> _messages;
+    std::vector<std::mutex> _mutex;
 };
 
 #endif // YENET_H
