@@ -17,7 +17,9 @@ HEADERS += \
     Ypackage.h \
     Ychain.hpp \
     YSocketClient.h \
-    Yuser.h
+    Yuser.h \
+    Yenet.h \
+    Yevent.h
 
 SOURCES += \
     Ywork.cpp \
@@ -30,4 +32,6 @@ SOURCES += \
     Ypackage.cpp \
     YSocketClient.cpp \
     Yuser.cpp \
-    Ybasis.cpp
+    Ybasis.cpp \
+    Yenet.cpp \
+    Yevent.cpp
