@@ -11,8 +11,6 @@
 
 #include "Ythreadpool.h"
 
-Ythreadpool::Ythreadpool(){}
-
 typedef enum {
     immediate_shutdown = 1,
     graceful_shutdown  = 2

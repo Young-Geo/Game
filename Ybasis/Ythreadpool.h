@@ -63,11 +63,4 @@ int threadpool_add(threadpool_t *pool, void (*routine)(void *),
 int threadpool_destroy(threadpool_t *pool, int flags);
 
 
-
-class Ythreadpool
-{
-public:
-    Ythreadpool();
-};
-
 #endif // __YTHREADPOOL_H__
