@@ -46,9 +46,26 @@ void    Yenet::Destory()
     enet_host_destroy(_handle);
 }
 
-void    Yenet::Run(Yint i)
+void    Yenet::Run()
 {
+    ENetPacket *pack = NULL;
+    //work
+    while (true)
+    {
+        //
+        _mutex.lock();
 
+        pack = (ENetPacket *)_que.front();
+        _que.pop();
+        _mutex.unlock();
+        if (!pack) {
+            continue;
+        }
+        //pack
+
+
+        pack = NULL;
+    }
 }
 
 void    Yenet::Loop(Yint workNum)
@@ -63,15 +80,11 @@ void    Yenet::Loop(Yint workNum)
     for (Yint i = 0 ; i < workNum; ++i)
     {
         std::shared_ptr<std::thread> ptr;
-        std::queue<void *> _que;
-        std::mutex  _mute;
-        ptr = std::make_shared<std::thread>(std::bind(&Yenet::Run, this, i));
+        ptr = std::make_shared<std::thread>(std::bind(&Yenet::Run, this));
         if (!ptr)
             continue;
         ptr->detach();
         thread_Ptrs.push_back(ptr);
-        _messages.push_back(_que);
-        //_mutex.push_back(_mute);//need geng gai
     }
     /* Wait up to 1000 milliseconds for an event. */
     while (true)
@@ -106,9 +119,9 @@ void    Yenet::Loop(Yint workNum)
 
                 if (_work.find(event.peer) != _work.end()) {
                     //
-                    _mutex[_work[event.peer]].lock();
-                    _messages[_work[event.peer]].push(event.packet);
-                    _mutex[_work[event.peer]].unlock();
+                    _mutex.lock();
+                    _que.push(event.packet);
+                    _mutex.unlock();
                 }
             }
 

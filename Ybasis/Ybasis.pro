@@ -19,7 +19,8 @@ HEADERS += \
     YSocketClient.h \
     Yuser.h \
     Yenet.h \
-    Yevent.h
+    Yevent.h \
+    Ythreadpool.h
 
 SOURCES += \
     Ywork.cpp \
@@ -34,4 +35,5 @@ SOURCES += \
     Yuser.cpp \
     Ybasis.cpp \
     Yenet.cpp \
-    Yevent.cpp
+    Yevent.cpp \
+    Ythreadpool.cpp
