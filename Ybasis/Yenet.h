@@ -8,6 +8,7 @@
 #define __YENET_H__
 
 #include "Ybasis.h"
+#include "Ythreadpool.h"
 #include <enet/enet.h>
 
 enum ENET
@@ -38,4 +39,4 @@ private:
     std::queue<void *> _que;
 };
 
-#endif // YENET_H
+#endif // __YENET_H__
